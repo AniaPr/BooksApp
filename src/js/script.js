@@ -8,10 +8,21 @@ const filters = [];
 
 function render() {
   const booksList = dataSource.books;
-  for (let book in booksList) {
-    const bookData = booksList[book];
+  for (let bookId in booksList) {
+    const book = booksList[bookId];
 
-    const generateHTML = templates.templateBook(bookData);
+    const ratingBgc = determineRatingBgc(book.rating);
+    const ratingWidth = book.rating * 10;
+
+    const generateHTML = templates.templateBook({
+      name: book.name,
+      price: book.price,
+      id: book.id,
+      image: book.image,
+      rating: book.rating,
+      ratingBgc,
+      ratingWidth,
+    });
 
     const generateDOM = utils.createDOMFromHTML(generateHTML);
 
@@ -46,7 +57,6 @@ function initActions() {
   const filtersForm = document.querySelector('.filters');
 
   filtersForm.addEventListener('click', function (event) {
-    console.log('Checkbox was clicked!');
     if (
       event.target.tagName == 'INPUT' &&
       event.target.type == 'checkbox' &&
@@ -60,8 +70,6 @@ function initActions() {
         const indexOfFilter = filters.indexOf(event.target.value);
         filters.splice(indexOfFilter, 1);
       }
-
-      console.log(filters);
     }
     filterBooks();
   });
@@ -79,7 +87,6 @@ function filterBooks() {
         shouldBeHidden = true;
         break;
       }
-      console.log(filterElem, book.details[filter]);
     }
 
     if (shouldBeHidden) {
@@ -88,6 +95,22 @@ function filterBooks() {
       filterElem.classList.remove('hidden');
     }
   }
+}
+
+function determineRatingBgc(rating) {
+  let background = '';
+
+  if (rating < 6) {
+    background = 'linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%)';
+  } else if (rating > 6 && rating <= 8) {
+    background = 'linear-gradient(to bottom, #b4df5b 0%, #b4df5b 100%)';
+  } else if (rating > 8 && rating <= 9) {
+    background = 'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)';
+  } else if (rating > 9) {
+    background = 'linear-gradient(to bottom, #ff0084 0%, #ff0084 100%)';
+  }
+
+  return background;
 }
 
 render();
