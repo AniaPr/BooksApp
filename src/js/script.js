@@ -71,16 +71,16 @@
       for (let book of dataSource.books) {
         let shouldBeHidden = false;
 
-        const filterElem = document.querySelector(
-          `.book__image[data-id="${book.id}"]`
-        );
-
         for (const filter of thisBook.filters) {
-          if (book.details[filter]) {
+          if (!book.details[filter]) {
             shouldBeHidden = true;
             break;
           }
         }
+
+        const filterElem = document.querySelector(
+          `.book__image[data-id="${book.id}"]`
+        );
 
         if (shouldBeHidden) {
           filterElem.classList.add('hidden');
@@ -118,9 +118,7 @@
           event.target.type == 'checkbox' &&
           event.target.name == 'filter'
         ) {
-          console.log('value:', event.target.value);
-
-          if (event.target.checked == true) {
+          if (event.target.checked) {
             thisBook.filters.push(event.target.value);
           } else {
             const indexOfFilter = thisBook.filters.indexOf(event.target.value);
@@ -132,20 +130,14 @@
     }
 
     determineRatingBgc(rating) {
-      const thisBook = this;
-
       if (rating < 6) {
-        return (thisBook.background =
-          'linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%)');
+        return 'linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%)';
       } else if (rating > 6 && rating <= 8) {
-        return (thisBook.background =
-          'linear-gradient(to bottom, #b4df5b 0%, #b4df5b 100%)');
+        return 'linear-gradient(to bottom, #b4df5b 0%, #b4df5b 100%)';
       } else if (rating > 8 && rating <= 9) {
-        return (thisBook.background =
-          'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)');
+        return 'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)';
       } else if (rating > 9) {
-        return (thisBook.background =
-          'linear-gradient(to bottom, #ff0084 0%, #ff0084 100%)');
+        return 'linear-gradient(to bottom, #ff0084 0%, #ff0084 100%)';
       }
     }
   }
